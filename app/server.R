@@ -35,22 +35,32 @@ if (!require("leafsync")) {
     install.packages("leafsync")
     library(leafsync)
 }
+if (!require("rgdal")) {
+    install.packages("rgdal")
+    library(rgdal)
+}
+if (!require("leafpop")) {
+    install.packages("leafpop")
+    library(leafpop)
+}
+if (!require("sf")) {
+    install.packages("sf")
+    library(sf)
+}
+if (!require("geojsonsf")) {
+    install.packages("geojsonsf")
+    library(geojsonsf)
+}
+if (!require("ggplot2")) {
+    install.packages("ggplot2")
+    library(ggplot2)
+}
 
 #Data Processing
-total_citi_bike_df = read.csv('../data/citibike_data.csv')
-##compute the daily in and out difference for the station
-total_citi_bike_df$day_diff = total_citi_bike_df$endcount - total_citi_bike_df$startcount
-#assign each column to weekend or weekday
-total_citi_bike_df$weekend_or_weekday = ifelse(total_citi_bike_df$weekday %in% c('Saturday','Sunday'), "Weekend", "Weekday")
 
-#station info
-citi_bike_station_info <- total_citi_bike_df[,c('station_id','station_name','station_longitude','station_latitude')]
-#remove the duplicates based on station id 
-citi_bike_station_info <- citi_bike_station_info[!duplicated(citi_bike_station_info[ , c("station_id")]),]
+boroughs <- geojson_sf("../data/Borough_Boundaries.geojson")
 
-#split the bike data to pre-covid and covid time period
-citi_bike_pre_covid_df = total_citi_bike_df[difftime(total_citi_bike_df$date,"2019-05-31")<=0,] #2019-05-01 ~ 2019-05-31
-citi_bike_covid_df = total_citi_bike_df[difftime(total_citi_bike_df$date,"2020-04-30")>=0,] #2020-05-01 ~ 2021-05-31
+crime_data <- read.csv("../data/2022_complaint_dataset")
 
 
 # Define server logic required to draw a histogram
@@ -58,147 +68,61 @@ shinyServer(function(input, output) {
 
     ## Map Tab section
     
-    output$left_map <- renderLeaflet({
     
-    #adjust for weekday/weekend effect
-    if (input$adjust_time =='Overall') {
-        leaflet_plt_df <- citi_bike_pre_covid_df %>% 
-                            group_by(station_id) %>%
-                            summarise(total_start_count = sum(startcount),
-                                      total_end_count = sum(endcount),
-                                      total_day_diff = sum(day_diff),
-                                      total_diff_percentage = sum(day_diff)/sum(startcount),
-                            ) %>% left_join(citi_bike_station_info,by='station_id')
-    } else {
-        leaflet_plt_df <- citi_bike_pre_covid_df %>% 
-                            filter(weekend_or_weekday == input$adjust_time) %>%
-                            group_by(station_id) %>%
-                                summarise(total_start_count = sum(startcount),
-                                          total_end_count = sum(endcount),
-                                          total_day_diff = sum(day_diff),
-                                          total_diff_percentage = sum(day_diff)/sum(startcount),
-                                ) %>% left_join(citi_bike_station_info,by='station_id')
-                            } 
-
-        
-    map_2019 <- leaflet_plt_df %>%
-         leaflet(options = leafletOptions(minZoom = 11, maxZoom = 13)) %>%
-         addTiles() %>%
-         addProviderTiles("CartoDB.Positron",
-                          options = providerTileOptions(noWrap = TRUE)) %>%
-         setView(-73.9834,40.7504,zoom = 12)
-     
-     if (input$adjust_score == 'start_cnt') {
-         map_2019 %>%
-             addHeatmap(
-                        lng=~station_longitude,
-                        lat=~station_latitude,
-                        intensity=~total_start_count,
-                        max=4000,
-                        radius=8,
-                        blur=10)
-     }else if (input$adjust_score == 'end_cnt') {
-         map_2019 %>%
-             addHeatmap(
-                        lng=~station_longitude,
-                        lat=~station_latitude,
-                        intensity=~total_end_count,
-                        max=4000,
-                        radius=8,
-                        blur=10)
-     } else if (input$adjust_score == 'day_diff_absolute'){
-         map_2019 %>%
-             addHeatmap(
-                        lng=~station_longitude,
-                        lat=~station_latitude,
-                        intensity=~total_day_diff,
-                        max=50,
-                        radius=8,
-                        blur=10)
-         
-     }else if (input$adjust_score == 'day_diff_percentage'){
-         map_2019 %>%
-             addHeatmap(
-                        lng=~station_longitude,
-                        lat=~station_latitude,
-                        intensity=~total_diff_percentage,#change to total day diff percentage
-                        max=0.1,
-                        radius=8,
-                        blur=10)
-         
-     }
-     }) #left map plot
-    
-    output$right_map <- renderLeaflet({
-        #adjust for weekday/weekend effect
-        if (input$adjust_time =='Overall') {
-            leaflet_plt_df <- citi_bike_covid_df %>% 
-                group_by(station_id) %>%
-                summarise(total_start_count = sum(startcount),
-                          total_end_count = sum(endcount),
-                          total_day_diff = sum(day_diff),
-                          total_diff_percentage = sum(day_diff)/sum(startcount),
-                ) %>% left_join(citi_bike_station_info,by='station_id')
-        } else {
-            leaflet_plt_df <- citi_bike_covid_df %>% 
-                filter(weekend_or_weekday == input$adjust_time) %>%
-                group_by(station_id) %>%
-                summarise(total_start_count = sum(startcount),
-                          total_end_count = sum(endcount),
-                          total_day_diff = sum(day_diff),
-                          total_diff_percentage = sum(day_diff)/sum(startcount),
-                ) %>% left_join(citi_bike_station_info,by='station_id')
-        } 
-        #initial the map to plot on
-        map_2020 <- leaflet_plt_df %>%
-            leaflet(options = leafletOptions(minZoom = 11, maxZoom = 13)) %>%
+    # create foundational map
+    foundational.map <- reactive({
+        leaflet(options = leafletOptions(dragging = T, minZoom = 10, maxZoom = 16)) %>%
+            setView(lng = -73.92,lat = 40.72, zoom = 10) %>%
             addTiles() %>%
-            addProviderTiles("CartoDB.Positron",
-                             options = providerTileOptions(noWrap = TRUE)) %>%
-            setView(-73.9834,40.7504,zoom = 12) 
+            addProviderTiles("CartoDB.Positron") %>%
+            addPolygons(data = boroughs, # Add the borough boundaries
+                        fillColor = "transparent",
+                        color = "black",
+                        weight = 2,
+                        group = "test",
+                        layerId = ~boro_code,
+                        popup = popupGraph(p, width = 400, height = 300))
+            #addPopupGraphs(list(p), group = "test", width = 500, height = 200, type="svg")
+    })
+    
+    # Function for generation a popup based on the area clicked by the user
+    makePopupPlot <- function (clickedArea, df) {
+        # prepare the df for ggplot
+        bronx_data = df %>%
+            select(BORO_NM, OFNS_DESC, SUSP_AGE_GROUP, SUSP_RACE, SUSP_SEX, VIC_AGE_GROUP, VIC_RACE, VIC_SEX) %>%
+            filter(BORO_NM == toupper(clickedArea))
         
-        if (input$adjust_score == 'start_cnt') {
-            map_2020 %>%
-                addHeatmap(
-                           lng=~station_longitude,
-                           lat=~station_latitude,
-                            intensity=~total_start_count, #change to total start count
-                            max=4000,
-                            radius=8,
-                           blur=10)
-        }else if (input$adjust_score == 'end_cnt') {
-            map_2020 %>%
-                addHeatmap(
-                           lng=~station_longitude,
-                           lat=~station_latitude,
-                           intensity=~total_end_count,#change to total end count
-                           max=4000,
-                           radius=8,
-                           blur=10)
-        } else if (input$adjust_score == 'day_diff_absolute'){
-            map_2020 %>%
-                addHeatmap(
-                           lng=~station_longitude,
-                           lat=~station_latitude,
-                           intensity=~total_day_diff,#change to total day diff
-                           max=50,
-                           radius=8,
-                           blur=10)
-            
-        }else if (input$adjust_score == 'day_diff_percentage'){
-            map_2020 %>%
-                addHeatmap(
-                           lng=~station_longitude,
-                           lat=~station_latitude,
-                           intensity=~total_diff_percentage,#change to total day diff percentage
-                           max=0.1,
-                           radius=8,
-                           blur=10)
-            
-        }
+        # Suspect Age Group bar chart
+        bronx_data$SUSP_AGE_GROUP <- as.factor(bronx_data$SUSP_AGE_GROUP)
         
-    }) #right map plot
+        plot <- bronx_data %>%
+            count(SUSP_AGE_GROUP) %>%
+            filter(SUSP_AGE_GROUP == "<18" | SUSP_AGE_GROUP == "18-24" | SUSP_AGE_GROUP == "25-44" 
+                   | SUSP_AGE_GROUP == "45-64" | SUSP_AGE_GROUP == "65+") %>%
+            ggplot(aes(x = SUSP_AGE_GROUP, y = n)) +
+            xlab("Age") +
+            ylab("Count") +
+            geom_col(fill = "Red") +
+            geom_bar(position="stack", stat="identity", width = 0.9) +
+            coord_flip() +
+            ggtitle(paste0("Score overview in ", clickedArea)) + 
+            theme(legend.position = "none") +
+            theme(plot.margin = unit(c(0,0.5,0,0), "cm"), plot.title = element_text(size = 15)) 
+        
+        return (plot)
+    }
+    
+    # chart list
+    p <- as.list(NULL)
+    p <- lapply(1:nrow(boroughs), function(i) {
+        p[[i]] <- makePopupPlot(boroughs$boro_name[i], crime_data)
+    })
+    
+    output$myMap <- renderLeaflet({
+        
+        foundational.map()
+        
+    }) # end of leaflet::renderLeaflet({})
+    
 
 })
-
-
