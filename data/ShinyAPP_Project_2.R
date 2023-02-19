@@ -9,6 +9,7 @@ boroughs = readOGR("/Users/srushtisanghavi/Documents/COLUMBIA COURSEWORK/Spring 
 ## Data Analysis
 # Crime data of NYC for 2022
 library(dplyr)
+library(ggplot2)
 crime_data = read.csv("/Users/srushtisanghavi/Documents/COLUMBIA COURSEWORK/Spring 23/Applied Data Science/Assignment 2/2022_complaint_dataset.csv")
 
 head(crime_data)
@@ -18,12 +19,21 @@ bronx_data = crime_data %>%
   select(BORO_NM, OFNS_DESC, SUSP_AGE_GROUP, SUSP_RACE, SUSP_SEX, VIC_AGE_GROUP, VIC_RACE, VIC_SEX) %>%
   filter(BORO_NM == "BRONX")
 
-# Suspect
+# Suspect Age Group bar chart
 bronx_data$SUSP_AGE_GROUP <- as.factor(bronx_data$SUSP_AGE_GROUP)
+
+bronx_data %>%
+  count(SUSP_AGE_GROUP) %>%
+  filter(SUSP_AGE_GROUP == "<18" | SUSP_AGE_GROUP == "18-24" | SUSP_AGE_GROUP == "25-44" 
+         | SUSP_AGE_GROUP == "45-64" | SUSP_AGE_GROUP == "65+") %>%
+  ggplot(aes(x = SUSP_AGE_GROUP, y = n)) +
+  geom_col(fill = "Red")
+  
+
+## Suspect
+
 bronx_data$SUSP_RACE <- as.factor(bronx_data$SUSP_RACE)
 bronx_data$SUSP_SEX <- as.factor(bronx_data$SUSP_SEX)
-
-table(bronx_data$SUSP_AGE_GROUP)
 table(bronx_data$SUSP_RACE)
 table(bronx_data$SUSP_SEX)
 
