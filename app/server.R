@@ -58,7 +58,7 @@ if (!require("ggplot2")) {
 
 #Data Processing
 
-boroughs <- geojson_sf("../data/Borough_Boundaries.geojson")
+boroughs <- geojson_sf("../data/Borough Boundaries.geojson")
 
 crime_data <- read.csv("../data/2022_complaint_dataset")
 
@@ -77,7 +77,7 @@ shinyServer(function(input, output) {
             addProviderTiles("CartoDB.Positron") %>%
             addPolygons(data = boroughs, # Add the borough boundaries
                         fillColor = "transparent",
-                        color = "black",
+                        color = "Black",
                         weight = 2,
                         group = "test",
                         layerId = ~boro_code,
@@ -95,21 +95,31 @@ shinyServer(function(input, output) {
         # Suspect Age Group bar chart
         bronx_data$SUSP_AGE_GROUP <- as.factor(bronx_data$SUSP_AGE_GROUP)
         
-        plot <- bronx_data %>%
-            count(SUSP_AGE_GROUP) %>%
-            filter(SUSP_AGE_GROUP == "<18" | SUSP_AGE_GROUP == "18-24" | SUSP_AGE_GROUP == "25-44" 
-                   | SUSP_AGE_GROUP == "45-64" | SUSP_AGE_GROUP == "65+") %>%
-            ggplot(aes(x = SUSP_AGE_GROUP, y = n)) +
-            xlab("Age") +
-            ylab("Count") +
-            geom_col(fill = "Red") +
-            geom_bar(position="stack", stat="identity", width = 0.9) +
-            coord_flip() +
-            ggtitle(paste0("Score overview in ", clickedArea)) + 
-            theme(legend.position = "none") +
-            theme(plot.margin = unit(c(0,0.5,0,0), "cm"), plot.title = element_text(size = 15)) 
+        # plot <- bronx_data %>%
+        #     count(SUSP_AGE_GROUP) %>%
+        #     filter(SUSP_AGE_GROUP == "<18" | SUSP_AGE_GROUP == "18-24" | SUSP_AGE_GROUP == "25-44" 
+        #            | SUSP_AGE_GROUP == "45-64" | SUSP_AGE_GROUP == "65+") %>%
+        #     ggplot(aes(x = SUSP_AGE_GROUP, y = n)) +
+        #     xlab("Age") +
+        #     ylab("Count") +
+        #     geom_col(fill = "Red") +
+        #     geom_bar(position="stack", stat="identity", width = 0.9) +
+        #     coord_flip() +
+        #     ggtitle(paste0("Score overview in ", clickedArea)) + 
+        #     theme(legend.position = "none") +
+        #     theme(plot.margin = unit(c(0,0.5,0,0), "cm"), plot.title = element_text(size = 15)) 
         
-        return (plot)
+        age_levels = c("<18", "18-24", "25-44", "45-64", "65+")
+        age_group_plot = bronx_data %>%
+          count(SUSP_AGE_GROUP) %>%
+          filter(SUSP_AGE_GROUP %in% age_levels) %>%
+          ggplot(aes(x = reorder(SUSP_AGE_GROUP, - n), y = n)) +
+          geom_col(fill = "Red") +
+          ggtitle("Suspect Age group Statistics") +
+          theme(plot.title = element_text(hjust = 0.5)) +
+          xlab("Age Group") + ylab("No. of Suspects")
+        
+        return (age_group_plot)
     }
     
     # chart list

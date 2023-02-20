@@ -33,13 +33,13 @@ body <- dashboardBody(
     
     tabItem(tabName = "Home", fluidPage(
       fluidRow(box(width = 15, title = "Introduction", status = "primary",
-                   solidHeader = TRUE, h3("Crime Data for five Boroughs in NYC"),
-                   h4("By Srushti Divyesh Sa ghavi, Mingrui Shi, Weijie Xia, YiXun Xu, Aubrey Yan, Dongxu Zhang"),
+                   solidHeader = TRUE, h3("Crime Data for the 5 Boroughs in NYC"),
+                   h4("By Srushti Divyesh Sanghavi, Mingrui Shi, Weijie Xia, YiXun Xu, Aubrey Yan, Dongxu Zhang"),
                    h5("A")
       )
       ),
       fluidRow(box(width = 15, title = "Targeted User", status = "primary", solidHeader=TRUE,
-                   h5("We believe that the application would be useful for anyone who are planning to live in NYC"))),
+                   h5("We believe that the application would be useful for anyone who is planning to live in NYC"))),
       fluidRow(box(width = 15, title = "How to Use The App", status = "primary",
                    solidHeader = TRUE,
                    h5("The application is divided into 5 separate tabs"),

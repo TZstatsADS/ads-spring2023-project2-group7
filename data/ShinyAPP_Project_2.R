@@ -14,7 +14,7 @@ crime_data = read.csv("/Users/srushtisanghavi/Documents/COLUMBIA COURSEWORK/Spri
 
 head(crime_data)
 
-## BRONX DATA
+## BRONX DATA ---- Use Bronx data for populating the charts in Shiny
 bronx_data = crime_data %>%
   select(BORO_NM, OFNS_DESC, SUSP_AGE_GROUP, SUSP_RACE, SUSP_SEX, VIC_AGE_GROUP, VIC_RACE, VIC_SEX) %>%
   filter(BORO_NM == "BRONX")
@@ -22,121 +22,274 @@ bronx_data = crime_data %>%
 # Suspect Age Group bar chart
 bronx_data$SUSP_AGE_GROUP <- as.factor(bronx_data$SUSP_AGE_GROUP)
 
-bronx_data %>%
+age_levels = c("<18", "18-24", "25-44", "45-64", "65+")
+age_group_plot = bronx_data %>%
   count(SUSP_AGE_GROUP) %>%
-  filter(SUSP_AGE_GROUP == "<18" | SUSP_AGE_GROUP == "18-24" | SUSP_AGE_GROUP == "25-44" 
-         | SUSP_AGE_GROUP == "45-64" | SUSP_AGE_GROUP == "65+") %>%
-  ggplot(aes(x = SUSP_AGE_GROUP, y = n)) +
-  geom_col(fill = "Red")
+  filter(SUSP_AGE_GROUP %in% age_levels) %>%
+  ggplot(aes(x = reorder(SUSP_AGE_GROUP, - n), y = n)) +
+  geom_col(fill = "Red") +
+  ggtitle("Suspect Age group data for Bronx") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlab("Age Group") + ylab("No. of Suspects")
   
-
-## Suspect
-
+# Suspect Race bar chart
 bronx_data$SUSP_RACE <- as.factor(bronx_data$SUSP_RACE)
+
+race_levels = c("AMERICAN INDIAN/ALASKAN NATIVE", "ASIAN / PACIFIC ISLANDER", "BLACK", "BLACK HISPANIC", "WHITE", "WHITE HISPANIC")
+race_plot = bronx_data %>%
+  count(SUSP_RACE) %>%
+  filter(SUSP_RACE %in% race_levels) %>%
+  ggplot(aes(x = reorder(SUSP_RACE, + n), y = n)) +
+  geom_col(fill = "Blue") +
+  ggtitle("Suspect Race data for Bronx") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlab("Race") + ylab("No. of Suspects") +
+  coord_flip()
+
+# Suspect Sex pie chart
 bronx_data$SUSP_SEX <- as.factor(bronx_data$SUSP_SEX)
-table(bronx_data$SUSP_RACE)
-table(bronx_data$SUSP_SEX)
 
-# Victim
-bronx_data$VIC_AGE_GROUP <- as.factor(bronx_data$VIC_AGE_GROUP)
-bronx_data$VIC_RACE<- as.factor(bronx_data$VIC_RACE)
-bronx_data$VIC_SEX <- as.factor(bronx_data$VIC_SEX)
+sex_levels = c("F", "M", "U")
+sex_plot = bronx_data %>%
+  count(SUSP_SEX) %>%
+  filter(SUSP_SEX %in% sex_levels) %>%
+  mutate(perc = n / sum(n)) %>% 
+  arrange(perc) %>%
+  mutate(labels = scales::percent(perc)) %>%
+  ggplot(aes(x = "", y = perc, fill = SUSP_SEX)) +
+  geom_col(color = "black") +
+  geom_label(aes(label = labels), color = c("white", "black", "white"),
+             position = position_stack(vjust = 0.5),
+             show.legend = FALSE) +
+  guides(fill = guide_legend(title = "Sex")) +
+  scale_fill_viridis_d(labels=c('Female', 'Male', 'Unknown')) +
+  coord_polar(theta = "y") +
+  theme_void() +
+  ggtitle("Suspect Sex data for Bronx")+
+  theme(plot.title = element_text(hjust = 0.5))
 
-table(bronx_data$VIC_AGE_GROUP)
-table(bronx_data$VIC_RACE)
-table(bronx_data$VIC_SEX)
+
+###### Use Bronx data for populating the charts in Shiny #############
+
+
 
 ## MANHATTAN DATA
 manhattan_data = crime_data %>%
   select(BORO_NM, OFNS_DESC, SUSP_AGE_GROUP, SUSP_RACE, SUSP_SEX, VIC_AGE_GROUP, VIC_RACE, VIC_SEX) %>%
   filter(BORO_NM == "MANHATTAN")
 
-# Suspect
+# Suspect Age Group bar chart
 manhattan_data$SUSP_AGE_GROUP <- as.factor(manhattan_data$SUSP_AGE_GROUP)
+
+age_levels = c("<18", "18-24", "25-44", "45-64", "65+")
+manhattan_data %>%
+  count(SUSP_AGE_GROUP) %>%
+  filter(SUSP_AGE_GROUP %in% age_levels) %>%
+  ggplot(aes(x = reorder(SUSP_AGE_GROUP, - n), y = n)) +
+  geom_col(fill = "Red") +
+  ggtitle("Suspect Age group data for Manhattan") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlab("Age Group") + ylab("No. of Suspects")
+
+# Suspect Race bar chart
 manhattan_data$SUSP_RACE <- as.factor(manhattan_data$SUSP_RACE)
+
+wanted_levels = c("AMERICAN INDIAN/ALASKAN NATIVE", "ASIAN / PACIFIC ISLANDER", "BLACK", "BLACK HISPANIC", "WHITE", "WHITE HISPANIC")
+manhattan_data %>%
+  count(SUSP_RACE) %>%
+  filter(SUSP_RACE %in% wanted_levels) %>%
+  ggplot(aes(x = reorder(SUSP_RACE, + n), y = n)) +
+  geom_col(fill = "Blue") +
+  ggtitle("Suspect Race data for Manhattan") +
+  theme(plot.title = element_text(hjust = 0.5)) + 
+  xlab("Race") + ylab("No. of Suspects") +
+  coord_flip()
+
+# Suspect Sex pie chart
 manhattan_data$SUSP_SEX <- as.factor(manhattan_data$SUSP_SEX)
 
-table(manhattan_data$SUSP_AGE_GROUP)
-table(manhattan_data$SUSP_RACE)
-table(manhattan_data$SUSP_SEX)
-
-# Victim
-manhattan_data$VIC_AGE_GROUP <- as.factor(manhattan_data$VIC_AGE_GROUP)
-manhattan_data$VIC_RACE<- as.factor(manhattan_data$VIC_RACE)
-manhattan_data$VIC_SEX <- as.factor(manhattan_data$VIC_SEX)
-
-table(manhattan_data$VIC_AGE_GROUP)
-table(manhattan_data$VIC_RACE)
-table(manhattan_data$VIC_SEX)
+wanted_levels = c("F", "M", "U")
+manhattan_data %>%
+  count(SUSP_SEX) %>%
+  filter(SUSP_SEX %in% wanted_levels) %>%
+  mutate(perc = n / sum(n)) %>% 
+  arrange(perc) %>%
+  mutate(labels = scales::percent(perc)) %>%
+  ggplot(aes(x = "", y = perc, fill = SUSP_SEX)) +
+  geom_col(color = "black") +
+  geom_label(aes(label = labels), color = c("white", "black", "white"),
+             position = position_stack(vjust = 0.5),
+             show.legend = FALSE) +
+  guides(fill = guide_legend(title = "Sex")) +
+  scale_fill_viridis_d(labels=c('Female', 'Male', 'Unknown')) +
+  coord_polar(theta = "y") +
+  theme_void() +
+  ggtitle("Suspect Sex data for Manhattan")+
+  theme(plot.title = element_text(hjust = 0.5))
 
 ## BROOKLYN DATA
 brooklyn_data = crime_data %>%
   select(BORO_NM, OFNS_DESC, SUSP_AGE_GROUP, SUSP_RACE, SUSP_SEX, VIC_AGE_GROUP, VIC_RACE, VIC_SEX) %>%
   filter(BORO_NM == "BROOKLYN")
 
-# Suspect
+# Suspect Age Group bar chart
 brooklyn_data$SUSP_AGE_GROUP <- as.factor(brooklyn_data$SUSP_AGE_GROUP)
+
+wanted_levels = c("<18", "18-24", "25-44", "45-64", "65+")
+brooklyn_data %>%
+  count(SUSP_AGE_GROUP) %>%
+  filter(SUSP_AGE_GROUP %in% wanted_levels) %>%
+  ggplot(aes(x = reorder(SUSP_AGE_GROUP, - n), y = n)) +
+  geom_col(fill = "Red") +
+  ggtitle("Suspect Age group data for Brooklyn") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlab("Age Group") + ylab("No. of Suspects")
+
+# Suspect Race bar chart
 brooklyn_data$SUSP_RACE <- as.factor(brooklyn_data$SUSP_RACE)
+
+wanted_levels = c("AMERICAN INDIAN/ALASKAN NATIVE", "ASIAN / PACIFIC ISLANDER", "BLACK", "BLACK HISPANIC", "WHITE", "WHITE HISPANIC")
+brooklyn_data %>%
+  count(SUSP_RACE) %>%
+  filter(SUSP_RACE %in% wanted_levels) %>%
+  ggplot(aes(x = reorder(SUSP_RACE, + n), y = n)) +
+  geom_col(fill = "Blue") +
+  ggtitle("Suspect Race data for Brooklyn") +
+  theme(plot.title = element_text(hjust = 0.5)) + 
+  xlab("Race") + ylab("No. of Suspects") +
+  coord_flip()
+
+# Suspect Sex pie chart
 brooklyn_data$SUSP_SEX <- as.factor(brooklyn_data$SUSP_SEX)
 
-table(brooklyn_data$SUSP_AGE_GROUP)
-table(brooklyn_data$SUSP_RACE)
-table(brooklyn_data$SUSP_SEX)
+wanted_levels = c("F", "M", "U")
+brooklyn_data %>%
+  count(SUSP_SEX) %>%
+  filter(SUSP_SEX %in% wanted_levels) %>%
+  mutate(perc = n / sum(n)) %>% 
+  arrange(perc) %>%
+  mutate(labels = scales::percent(perc)) %>%
+  ggplot(aes(x = "", y = perc, fill = SUSP_SEX)) +
+  geom_col(color = "black") +
+  geom_label(aes(label = labels), color = c("white", "black", "white"),
+             position = position_stack(vjust = 0.5),
+             show.legend = FALSE) +
+  guides(fill = guide_legend(title = "Sex")) +
+  scale_fill_viridis_d(labels=c('Female', 'Male', 'Unknown')) +
+  coord_polar(theta = "y") +
+  theme_void() +
+  ggtitle("Suspect Sex data for Brooklyn")+
+  theme(plot.title = element_text(hjust = 0.5))
 
-# Victim
-brooklyn_data$VIC_AGE_GROUP <- as.factor(brooklyn_data$VIC_AGE_GROUP)
-brooklyn_data$VIC_RACE<- as.factor(brooklyn_data$VIC_RACE)
-brooklyn_data$VIC_SEX <- as.factor(brooklyn_data$VIC_SEX)
-
-table(brooklyn_data$VIC_AGE_GROUP)
-table(brooklyn_data$VIC_RACE)
-table(brooklyn_data$VIC_SEX)
 
 ## STATEN ISLAND DATA
 statenIsland_data = crime_data %>%
   select(BORO_NM, OFNS_DESC, SUSP_AGE_GROUP, SUSP_RACE, SUSP_SEX, VIC_AGE_GROUP, VIC_RACE, VIC_SEX) %>%
   filter(BORO_NM == "STATEN ISLAND")
 
-# Suspect
+# Suspect Age Group bar chart
 statenIsland_data$SUSP_AGE_GROUP <- as.factor(statenIsland_data$SUSP_AGE_GROUP)
+
+wanted_levels = c("<18", "18-24", "25-44", "45-64", "65+")
+statenIsland_data %>%
+  count(SUSP_AGE_GROUP) %>%
+  filter(SUSP_AGE_GROUP %in% wanted_levels) %>%
+  ggplot(aes(x = reorder(SUSP_AGE_GROUP, - n), y = n)) +
+  geom_col(fill = "Red") +
+  ggtitle("Suspect Age group data for Staten Island") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlab("Age Group") + ylab("No. of Suspects")
+
+# Suspect Race bar chart
 statenIsland_data$SUSP_RACE <- as.factor(statenIsland_data$SUSP_RACE)
+
+wanted_levels = c("AMERICAN INDIAN/ALASKAN NATIVE", "ASIAN / PACIFIC ISLANDER", "BLACK", "BLACK HISPANIC", "WHITE", "WHITE HISPANIC")
+statenIsland_data %>%
+  count(SUSP_RACE) %>%
+  filter(SUSP_RACE %in% wanted_levels) %>%
+  ggplot(aes(x = reorder(SUSP_RACE, + n), y = n)) +
+  geom_col(fill = "Blue") +
+  ggtitle("Suspect Race data for Staten Island") +
+  theme(plot.title = element_text(hjust = 0.5)) + 
+  xlab("Race") + ylab("No. of Suspects") +
+  coord_flip()
+
+# Suspect Sex pie chart
 statenIsland_data$SUSP_SEX <- as.factor(statenIsland_data$SUSP_SEX)
 
-table(statenIsland_data$SUSP_AGE_GROUP)
-table(statenIsland_data$SUSP_RACE)
-table(statenIsland_data$SUSP_SEX)
+wanted_levels = c("F", "M", "U")
+statenIsland_data %>%
+  count(SUSP_SEX) %>%
+  filter(SUSP_SEX %in% wanted_levels) %>%
+  mutate(perc = n / sum(n)) %>% 
+  arrange(perc) %>%
+  mutate(labels = scales::percent(perc)) %>%
+  ggplot(aes(x = "", y = perc, fill = SUSP_SEX)) +
+  geom_col(color = "black") +
+  geom_label(aes(label = labels), color = c("white", "black", "white"),
+             position = position_stack(vjust = 0.5),
+             show.legend = FALSE) +
+  guides(fill = guide_legend(title = "Sex")) +
+  scale_fill_viridis_d(labels=c('Female', 'Male', 'Unknown')) +
+  coord_polar(theta = "y") +
+  theme_void() +
+  ggtitle("Suspect Sex data for Staten Island")+
+  theme(plot.title = element_text(hjust = 0.5))
 
-# Victim
-statenIsland_data$VIC_AGE_GROUP <- as.factor(statenIsland_data$VIC_AGE_GROUP)
-statenIsland_data$VIC_RACE<- as.factor(statenIsland_data$VIC_RACE)
-statenIsland_data$VIC_SEX <- as.factor(statenIsland_data$VIC_SEX)
-
-table(statenIsland_data$VIC_AGE_GROUP)
-table(statenIsland_data$VIC_RACE)
-table(statenIsland_data$VIC_SEX)
 
 ## QUEENS DATA
 queens_data = crime_data %>%
   select(BORO_NM, OFNS_DESC, SUSP_AGE_GROUP, SUSP_RACE, SUSP_SEX, VIC_AGE_GROUP, VIC_RACE, VIC_SEX) %>%
   filter(BORO_NM == "QUEENS")
 
-# Suspect
+# Suspect Age Group bar chart
 queens_data$SUSP_AGE_GROUP <- as.factor(queens_data$SUSP_AGE_GROUP)
+
+wanted_levels = c("<18", "18-24", "25-44", "45-64", "65+")
+queens_data %>%
+  count(SUSP_AGE_GROUP) %>%
+  filter(SUSP_AGE_GROUP %in% wanted_levels) %>%
+  ggplot(aes(x = reorder(SUSP_AGE_GROUP, - n), y = n)) +
+  geom_col(fill = "Red") +
+  ggtitle("Suspect Age group data for Queens") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlab("Age Group") + ylab("No. of Suspects")
+
+# Suspect Race bar chart
 queens_data$SUSP_RACE <- as.factor(queens_data$SUSP_RACE)
+
+wanted_levels = c("AMERICAN INDIAN/ALASKAN NATIVE", "ASIAN / PACIFIC ISLANDER", "BLACK", "BLACK HISPANIC", "WHITE", "WHITE HISPANIC")
+queens_data %>%
+  count(SUSP_RACE) %>%
+  filter(SUSP_RACE %in% wanted_levels) %>%
+  ggplot(aes(x = reorder(SUSP_RACE, + n), y = n)) +
+  geom_col(fill = "Blue") +
+  ggtitle("Suspect Race data for Queens") +
+  theme(plot.title = element_text(hjust = 0.5)) + 
+  xlab("Race") + ylab("No. of Suspects") +
+  coord_flip()
+
+# Suspect Sex pie chart
 queens_data$SUSP_SEX <- as.factor(queens_data$SUSP_SEX)
 
-table(queens_data$SUSP_AGE_GROUP)
-table(queens_data$SUSP_RACE)
-table(queens_data$SUSP_SEX)
-
-# Victim
-queens_data$VIC_AGE_GROUP <- as.factor(queens_data$VIC_AGE_GROUP)
-queens_data$VIC_RACE<- as.factor(queens_data$VIC_RACE)
-queens_data$VIC_SEX <- as.factor(queens_data$VIC_SEX)
-
-table(queens_data$VIC_AGE_GROUP)
-table(queens_data$VIC_RACE)
-table(queens_data$VIC_SEX)
+wanted_levels = c("F", "M", "U")
+queens_data %>%
+  count(SUSP_SEX) %>%
+  filter(SUSP_SEX %in% wanted_levels) %>%
+  mutate(perc = n / sum(n)) %>% 
+  arrange(perc) %>%
+  mutate(labels = scales::percent(perc)) %>%
+  ggplot(aes(x = "", y = perc, fill = SUSP_SEX)) +
+  geom_col(color = "black") +
+  geom_label(aes(label = labels), color = c("white", "black", "white"),
+             position = position_stack(vjust = 0.5),
+             show.legend = FALSE) +
+  guides(fill = guide_legend(title = "Sex")) +
+  scale_fill_viridis_d(labels=c('Female', 'Male', 'Unknown')) +
+  coord_polar(theta = "y") +
+  theme_void() +
+  ggtitle("Suspect Sex data for Queens")+
+  theme(plot.title = element_text(hjust = 0.5))
 
 
 
