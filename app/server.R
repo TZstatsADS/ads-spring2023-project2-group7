@@ -75,13 +75,15 @@ shinyServer(function(input, output) {
             setView(lng = -73.92,lat = 40.72, zoom = 10) %>%
             addTiles() %>%
             addProviderTiles("CartoDB.Positron") %>%
-            addPolygons(data = boroughs, # Add the borough boundaries
-                        fillColor = "transparent",
-                        color = "Black",
-                        weight = 2,
-                        group = "test",
-                        layerId = ~boro_code,
-                        popup = popupGraph(p, width = 400, height = 300))
+      addPolygons(data = boroughs, # Add the borough boundaries
+                  fillColor = ~pal(strtoi(boroughs$boro_code)),
+                  color = "Black",
+                  weight = 2,
+                  fillOpacity = 0.5,
+                  group = "test",
+                  layerId = ~boro_code,
+                  highlightOptions = highlightOptions(color='white',weight=1,bringToFront = TRUE),
+                  popup = popupGraph(p, width = 400, height = 300))
             #addPopupGraphs(list(p), group = "test", width = 500, height = 200, type="svg")
     })
     
