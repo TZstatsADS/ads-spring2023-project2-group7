@@ -62,9 +62,9 @@ if (!require("forcats")) {
 
 #Data Processing
 
-boroughs <- geojson_sf('https://data.cityofnewyork.us/api/geospatial/tqmj-j8zm?method=export&format=GeoJSON')
+boroughs <- geojson_sf("./data/Borough_Boundaries.geojson")
 
-crime_data <- read.csv("../data/2022_complaint_dataset")
+crime_data <- read.csv("./data/2022_complaint_dataset")
 
 pal <- colorBin("RdYlBu", domain = 1:5)
 
