@@ -28,6 +28,9 @@ if (!require("shinydashboard")) {
 
 # Define UI for application that draws a histogram
 body <- dashboardBody(
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+  ),
   tabItems(
     # ------------------ Home ----------------------------------------------------------------
     
@@ -45,9 +48,8 @@ We hope you find our app informative and easy to use. Thank you for using our ap
                    h5("Our app is designed for anyone who is interested in exploring crime data in New York City. Whether you are a concerned citizen, a journalist, or a researcher, our app provides an interactive and informative way to explore crime data.
 For concerned citizens, our app can provide insight into crime patterns and trends in their neighborhoods, allowing them to take proactive steps to protect themselves and their communities. For journalists, our app can be a valuable tool for investigating crime stories and uncovering new angles. And for researchers, our app can provide a rich source of data for academic studies and analysis.
 Regardless of your background or interests, our app is designed to make crime data more accessible and engaging, empowering you to explore and understand the data in new ways. So, whether you're a data enthusiast or just looking to stay informed, we invite you to dive in and explore the fascinating world of crime data in New York City."))),
-      fluidRow(box(width = 15, title = "How to Use The App", status = "primary",
+      fluidRow(box(width = 15, title = "Instructions", status = "primary",
                    solidHeader = TRUE,
-                   h5("Instructions"),
                    tags$div(tags$ul(
                      tags$li("Click on the second button on the left to open the map."),
                      tags$li("Use the buttons on the top left of the map to zoom in or out."),
@@ -67,9 +69,10 @@ Regardless of your background or interests, our app is designed to make crime da
                     tags$br(),
                     awesomeRadio("feature", 
                                  label="Features",
-                                 choices =c("Age",
+                                 choices =c("Crime Desc",
+                                            "Age",
                                             "Race", 
-                                            "Sex"), 
+                                            "Sex"),
                                  selected = "Age",
                                  status = "warning"),
                     style = "opacity: 0.70"
@@ -86,16 +89,16 @@ Regardless of your background or interests, our app is designed to make crime da
       titlePanel("Acknowledgement  "),
       
       HTML(
-        "<p>This application is based on R and shiny app.</p>"
+        "<p>This application is based on R and shiny app. We would like to express our sincere gratitude to the New York City Police Department (NYPD) for providing us with the necessary data to develop this application. We would also like to thank the NYC Open Data platform for hosting the data. Finally, we would like to acknowledge the valuable contribution of our team members who worked tirelessly to develop and improve this application.</p>"
       ),
       
       titlePanel("Contributors"),
       
       HTML(
-        " <p>Srushti Divyesh Sanghavi(@columbia.edu) </p>",
+        " <p>Srushti Divyesh Sanghavi(ss6594@columbia.edu) </p>",
         " <p>Mingrui Shi(@columbia.edu)</p>",
-        " <p>Weijie Xia(@columbia.edu) </p>",
-        " <p>YiXun Xu(@columbia.edu)</p>",
+        " <p>Weijie Xia(wx2281@columbia.edu) </p>",
+        " <p>YiXun Xu(yx2740@columbia.edu)</p>",
         " <p>Aubrey Yan(xy2543@columbia.edu) </p>",
         " <p>Dongxu Zhang(dz2510@columbia.edu)</p>")
     )) # end of tab
@@ -104,9 +107,8 @@ Regardless of your background or interests, our app is designed to make crime da
 
 shinyUI(
   dashboardPage(
-    title="NYC Crime Explorer",
     skin="purple",
-    dashboardHeader(title=span("Crimes in NYC",style="font-size: 16px")),
+    dashboardHeader(title="NYC Crime Explorer"),
     
     dashboardSidebar(sidebarMenu(
       menuItem("Home", tabName = "Home", icon = icon("home")),

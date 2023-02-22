@@ -159,7 +159,7 @@ shinyServer(function(input, output) {
                         group = "test",
                         layerId = ~boro_code,
                         highlightOptions = highlightOptions(color='white',weight=1,bringToFront = TRUE),
-                        popup = popupGraph(p, width = 400, height = 300))
+                        popup = popupGraph(p, width = 450, height = 300))
         #addPopupGraphs(list(p), group = "test", width = 500, height = 200, type="svg")
     })
     
