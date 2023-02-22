@@ -55,6 +55,10 @@ if (!require("ggplot2")) {
     install.packages("ggplot2")
     library(ggplot2)
 }
+if (!require("forcats")) {
+    install.packages("forcats")
+    library(forcats)
+}
 
 #Data Processing
 
@@ -119,7 +123,7 @@ shinyServer(function(input, output) {
                 coord_flip()
             return (race_plot)
         }
-        else {
+        else if (feature =='Sex') {
             sex_levels = c("F", "M", "U")
             sex_plot = target_data %>%
                 count(SUSP_SEX) %>%
@@ -138,6 +142,39 @@ shinyServer(function(input, output) {
                 theme_void() +
                 ggtitle(paste0("Suspect Sex group Statistics:", clickedArea))+
                 theme(plot.title = element_text(hjust = 0.5))
+        }
+        else {
+            
+            # Subset data to only include OFNS_DESC variable
+            ofns_data <- target_data$OFNS_DESC
+            
+            # Create factor with only the top 5 offenses, the rest will be combined into "Other"
+            ofns_factor <- fct_lump(ofns_data, n = 5)
+            
+            # Count the frequency of each offense
+            ofns_count <- table(ofns_factor)
+            names(ofns_count)[names(ofns_count) == "ASSAULT 3 & RELATED OFFENSES"] <- "ASSAULT"
+            names(ofns_count)[names(ofns_count) == "HARRASSMENT 2"] <- "HARRASSMENT"
+            names(ofns_count)[names(ofns_count) == "CRIMINAL MISCHIEF & RELATED OF"] <- "CRIMINAL MISCHIEF"
+            
+            
+            # Convert to a data frame for plotting
+            ofns_df <- data.frame(ofns = names(ofns_count), count = as.numeric(ofns_count))
+            
+            
+            # Sort by count in descending order
+            ofns_df <- ofns_df[order(-ofns_df$count),]
+            
+            # Create a pie chart
+            ggplot(ofns_df, aes(x = "", y = count, fill = ofns)) +
+                geom_bar(stat = "identity", width = 1) +
+                coord_polar("y", start = 0) +
+                theme_void() +
+                scale_fill_viridis_d() +
+                ggtitle(paste0("Top 5 Offense Types in ", clickedArea)) +
+                geom_text(aes(label = scales::percent(count/sum(count))), position = position_stack(vjust = 0.5)) +
+                labs(fill = "Offense Type") +
+                guides(fill = guide_legend(title = "Offense Type"))
         }
     }
     

@@ -73,7 +73,7 @@ Regardless of your background or interests, our app is designed to make crime da
                                             "Age",
                                             "Race", 
                                             "Sex"),
-                                 selected = "Age",
+                                 selected = "Crime Desc",
                                  status = "warning"),
                     style = "opacity: 0.70"
       )
