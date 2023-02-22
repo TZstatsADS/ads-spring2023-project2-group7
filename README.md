@@ -22,6 +22,9 @@ Term: Spring 2023
 Crime data can be overwhelming and difficult to interpret, but our app simplifies the process by providing an intuitive and interactive visual representation of crime incidents across the city's five boroughs. With just a few clicks, users can view aggregated information on crime records in each borough and drill down to explore specific details, such as suspect gender, age group, and race.
 We believe that our app will be of great value to a variety of users, from concerned citizens looking to stay informed about crime in their communities to researchers and policymakers seeking to analyze trends and patterns.
 
+Link to Shiny Application: https://enzoherewj.shinyapps.io/nyc_crime_explorer/
+
+Raw Dataset used for the project: https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Current-Year-To-Date-/5uac-w243
 
 + **Contribution statement**: Aubrey Yan designed the flow of the application, the use cases and the presentation. Srushti Divyesh Sanghavi and Weijie Xia worked on data cleaning, exploratory data analysis and visualizations for the application. Dongxu Zhang, Mingrui Shi and Yixun Xu developed the UI of the shiny app. All team members approve our work presented in this GitHub repository including this contributions statement.
 
