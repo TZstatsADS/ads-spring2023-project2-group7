@@ -62,6 +62,7 @@ boroughs <- geojson_sf("../data/Borough Boundaries.geojson")
 
 crime_data <- read.csv("../data/2022_complaint_dataset")
 
+pal <- colorBin("RdYlBu", domain = 1:5)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
