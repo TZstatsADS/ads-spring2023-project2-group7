@@ -68,9 +68,11 @@ shinyUI(
       dashboardSidebar(sidebarMenu(
         menuItem("Home", tabName = "Home", icon = icon("home")),
         menuItem("Map", tabName = "Map", icon = icon("map-marker-alt")),
-        menuItem("A", tabName = "A", icon = icon("dollar-sign")),
-        menuItem("B", tabName = "B", icon = icon("dollar-sign")),
-        menuItem("C", tabName = "C", icon = icon("fas fa-asterisk"))
+        selectInput("datacol",
+                    label="Sort by",
+                    selected="age",
+                    choices=c("Age","Sex","Race"),
+                    multiple=FALSE)
       )),
       body
     )
