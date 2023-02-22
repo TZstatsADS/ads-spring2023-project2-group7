@@ -53,7 +53,7 @@ Regardless of your background or interests, our app is designed to make crime da
                    tags$div(tags$ul(
                      tags$li("Click on the second button on the left to open the map."),
                      tags$li("Use the buttons on the top left of the map to zoom in or out."),
-                     tags$li("Use the EDA section to explore the distribution of suspect gender, age group, and race for the selected borough."),
+                     tags$li("Use the EDA section to explore the distribution of suspect gender, age group, race and offense types for the selected borough."),
                      tags$li("Click on a borough to see aggregated information on total crime records for that borough."),
                      tags$li("Click the third button on the left to access the references.")
                    ))
@@ -96,7 +96,7 @@ Regardless of your background or interests, our app is designed to make crime da
       
       HTML(
         " <p>Srushti Divyesh Sanghavi(ss6594@columbia.edu) </p>",
-        " <p>Mingrui Shi(@columbia.edu)</p>",
+        " <p>Mingrui Shi(ms6548@columbia.edu)</p>",
         " <p>Weijie Xia(wx2281@columbia.edu) </p>",
         " <p>YiXun Xu(yx2740@columbia.edu)</p>",
         " <p>Aubrey Yan(xy2543@columbia.edu) </p>",
