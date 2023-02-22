@@ -1,28 +1,13 @@
 # Project 2: Shiny App Development
 
 ### [Project Description](doc/project2_desc.md)
+We have created an NYC Crime Explorer app that will allow users to explore crime data in New York City in a unique and informative way.
 
-Term: Spring 2023
-
-![screenshot](doc/figs/map.jpg)
-
-In this second project of GR5243 Applied Data Science, we develop a *Exploratory Data Analysis and Visualization* shiny app on the work of a **NYC government agency/program** of your choice using NYC open data released on the [NYC Open Data By Agency](https://opendata.cityofnewyork.us/data/) website. In particular, many agencies have adjusted their work or rolled out new programs due to COVID, your app should provide ways for a user to explore quantiative measures of how covid has impacted daily life in NYC from different prospectives. See [Project 2 Description](doc/project2_desc.md) for more details.  
-
-The **learning goals** for this project is:
-
-- business intelligence for data science
-- data cleaning
-- data visualization
-- systems development/design life cycle
-- shiny app/shiny server
-
-*The above general statement about project 2 can be removed once you are finished with your project. It is optional.
-
-## Project Title: Crime statistcs in NYC
+## Project Title: NYC Crime Explorer
 Term: Spring 2023
 
 + Team # 7
-+ **Projec title**: + Team members
++ Team members
 	+ Srushti Divyesh Sanghavi
 	+ Mingrui Shi
 	+ Weijie Xia
@@ -30,11 +15,14 @@ Term: Spring 2023
 	+ Aubrey Yan
 	+ Dongxu Zhang
 
-+ **Project summary**: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
++ **Project summary**: 
+Crime data can be overwhelming and difficult to interpret, but our app simplifies the process by providing an intuitive and interactive visual representation of crime incidents across the city's five boroughs. With just a few clicks, users can view aggregated information on crime records in each borough and drill down to explore specific details, such as suspect gender, age group, and race.
+We believe that our app will be of great value to a variety of users, from concerned citizens looking to stay informed about crime in their communities to researchers and policymakers seeking to analyze trends and patterns.
 
-+ **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
 
-Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
++ **Contribution statement**: Aubrey Yan designed the flow of the application, the use cases and the presentation. Srushti Divyesh Sanghavi and Weijie Xia worked on data cleaning, exploratory data analysis and visualizations for the application. Dongxu Zhang, Mingrui Shi and Yixun Xu developed the UI of the shiny app. All team members approve our work presented in this GitHub repository including this contributions statement.
+
+This folder is organized as follows.
 
 ```
 proj/
@@ -46,4 +34,3 @@ proj/
 ```
 
 Please see each subfolder for a README file.
-
