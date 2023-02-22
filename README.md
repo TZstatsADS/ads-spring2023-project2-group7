@@ -1,6 +1,9 @@
 # Project 2: Shiny App Development
 
 ### [Project Description](doc/project2_desc.md)
+
+<img src="doc/figs/project_photo.png" width="500">
+
 We have created an NYC Crime Explorer app that will allow users to explore crime data in New York City in a unique and informative way.
 
 ## Project Title: NYC Crime Explorer
