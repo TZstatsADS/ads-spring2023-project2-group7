@@ -35,17 +35,25 @@ body <- dashboardBody(
       fluidRow(box(width = 15, title = "Introduction", status = "primary",
                    solidHeader = TRUE, h3("Crime Suspect Features for the Five Boroughs in NYC"),
                    h4("By Srushti Divyesh Sanghavi, Mingrui Shi, Weijie Xia, YiXun Xu, Aubrey Yan, Dongxu Zhang"),
-                   h5("Introduction goes here")
+                   h5("Welcome to our interactive crime map app! We are excited to share with you this tool that will allow you to explore crime data in New York City in a unique and informative way.
+Crime data can be overwhelming and difficult to interpret, but our app simplifies the process by providing an intuitive and interactive visual representation of crime incidents across the city's five boroughs. With just a few clicks, you can view aggregated information on crime records in each borough and drill down to explore specific details, such as suspect gender, age group, and race.
+We believe that our app will be of great value to a variety of users, from concerned citizens looking to stay informed about crime in their communities to researchers and policymakers seeking to analyze trends and patterns.
+We hope you find our app informative and easy to use. Thank you for using our app and we appreciate any feedback you may have to help us improve our tool.")
       )
       ),
       fluidRow(box(width = 15, title = "Targeted User", status = "primary", solidHeader=TRUE,
-                   h5("We believe that the application would be useful for anyone who is planning to live in NYC"))),
+                   h5("Our app is designed for anyone who is interested in exploring crime data in New York City. Whether you are a concerned citizen, a journalist, or a researcher, our app provides an interactive and informative way to explore crime data.
+For concerned citizens, our app can provide insight into crime patterns and trends in their neighborhoods, allowing them to take proactive steps to protect themselves and their communities. For journalists, our app can be a valuable tool for investigating crime stories and uncovering new angles. And for researchers, our app can provide a rich source of data for academic studies and analysis.
+Regardless of your background or interests, our app is designed to make crime data more accessible and engaging, empowering you to explore and understand the data in new ways. So, whether you're a data enthusiast or just looking to stay informed, we invite you to dive in and explore the fascinating world of crime data in New York City."))),
       fluidRow(box(width = 15, title = "How to Use The App", status = "primary",
                    solidHeader = TRUE,
-                   h5("The application is divided into 5 separate tabs"),
+                   h5("Instructions"),
                    tags$div(tags$ul(
-                     tags$li("The", strong("first"), "tab: Map can be clicked for detailed info"),
-                     tags$li("The", strong("second"), "tab: Reference")
+                     tags$li("Click on the second button on the left to open the map."),
+                     tags$li("Use the buttons on the top left of the map to zoom in or out."),
+                     tags$li("Use the EDA section to explore the distribution of suspect gender, age group, and race for the selected borough."),
+                     tags$li("Click on a borough to see aggregated information on total crime records for that borough."),
+                     tags$li("Click the third button on the left to access the references.")
                    ))
       ))
     )), # end of homepage
@@ -88,7 +96,7 @@ body <- dashboardBody(
         " <p>Mingrui Shi(@columbia.edu)</p>",
         " <p>Weijie Xia(@columbia.edu) </p>",
         " <p>YiXun Xu(@columbia.edu)</p>",
-        " <p>Aubrey Yan(@columbia.edu) </p>",
+        " <p>Aubrey Yan(xy2543@columbia.edu) </p>",
         " <p>Dongxu Zhang(dz2510@columbia.edu)</p>")
     )) # end of tab
   )
@@ -96,7 +104,7 @@ body <- dashboardBody(
 
 shinyUI(
   dashboardPage(
-    title="Crimes in NYC",
+    title="NYC Crime Explorer",
     skin="purple",
     dashboardHeader(title=span("Crimes in NYC",style="font-size: 16px")),
     
