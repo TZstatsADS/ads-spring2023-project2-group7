@@ -62,7 +62,7 @@ if (!require("forcats")) {
 
 #Data Processing
 
-boroughs <- geojson_sf("../data/Borough Boundaries.geojson")
+boroughs <- geojson_sf('https://data.cityofnewyork.us/api/geospatial/tqmj-j8zm?method=export&format=GeoJSON')
 
 crime_data <- read.csv("../data/2022_complaint_dataset")
 
